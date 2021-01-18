@@ -9,11 +9,11 @@ import {
   ListMapperCallback,
   ListForEachCallback,
 } from "./types"
-import cloneDeep from "lodash/cloneDeep"
 import { defaultDiffer } from "./defaultDiffer"
 import { defaultMerger } from "./defaultMerger"
 import { defaultRemover } from "./defaultRemover"
 import { ListListener } from "./ListListener"
+import { cloneDeep } from "lodash-es"
 
 export class List<TState = any> implements ObservableList<TState> {
   initialState: TState[]
