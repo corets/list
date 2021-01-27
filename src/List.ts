@@ -41,6 +41,10 @@ export class List<TState = any> implements ObservableList<TState> {
     return cloneDeep(this.state)
   }
 
+  getAt(index: number): TState | undefined {
+    return this.state[index]
+  }
+
   set(newState: TState[]): void {
     const isDifferent = this.differ(this.state, newState)
 
@@ -64,23 +68,23 @@ export class List<TState = any> implements ObservableList<TState> {
     this.set(mergedNewState)
   }
 
-  remove(...values: TState[]): void {
-    this.set(this.remover(this.state, values))
+  addAt(index: number, value: TState): void {
+    const newState = cloneDeep(this.state)
+    newState[index] = value
+
+    this.set(newState)
   }
 
   has(value: TState): boolean {
     return this.state.includes(value)
   }
 
-  getAt(index: number): TState | undefined {
-    return this.state[index]
+  hasAt(index: number): boolean {
+    return this.state[index] !== undefined
   }
 
-  setAt(index: number, value: TState): void {
-    const newState = cloneDeep(this.state)
-    newState[index] = value
-
-    this.set(newState)
+  remove(...values: TState[]): void {
+    this.set(this.remover(this.state, values))
   }
 
   removeAt(index: number): void {
@@ -88,10 +92,6 @@ export class List<TState = any> implements ObservableList<TState> {
     newState.splice(index, 1)
 
     this.set(newState)
-  }
-
-  hasAt(index: number): boolean {
-    return this.state[index] !== undefined
   }
 
   indexOf(value: TState): number {

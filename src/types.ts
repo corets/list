@@ -3,16 +3,15 @@ export interface ObservableList<TState = any> {
   initialState: TState[]
 
   get(): TState[]
+  getAt(index: number): TState | undefined
   set(newState: TState[]): void
   reset(initialState?: TState[]): void
   add(...values: TState[]): void
-  remove(...values: TState[]): void
+  addAt(index: number, value: TState): void
   has(value: TState): boolean
-
-  getAt(index: number): TState | undefined
-  setAt(index: number, value: TState): void
-  removeAt(index: number): void
   hasAt(index: number): boolean
+  remove(...values: TState[]): void
+  removeAt(index: number): void
   indexOf(value: TState): number
 
   filter(callback: ListFilterCallback<TState>): TState[]

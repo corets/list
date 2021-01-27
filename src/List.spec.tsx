@@ -60,17 +60,17 @@ describe("List", () => {
     expect(list.getAt(1)).toEqual("bar")
   })
 
-  it("sets state at specific index", () => {
+  it("adds state at specific index", () => {
     const state = ["foo", "bar", "baz"]
     const list = new List(state)
 
-    list.setAt(1, "yolo")
+    list.addAt(1, "yolo")
 
     expect(list.getAt(1)).toEqual("yolo")
     expect(list.get()).toEqual(["foo", "yolo", "baz"])
     expect(state).toEqual(["foo", "bar", "baz"])
 
-    list.setAt(3, "boom")
+    list.addAt(3, "boom")
     expect(list.getAt(3)).toEqual("boom")
     expect(list.get()).toEqual(["foo", "yolo", "baz", "boom"])
     expect(state).toEqual(["foo", "bar", "baz"])
@@ -223,7 +223,7 @@ describe("List", () => {
     expect(callback).toHaveBeenCalledTimes(5)
     expect(callback).toHaveBeenCalledWith(["foo"])
 
-    list.setAt(1, "yolo")
+    list.addAt(1, "yolo")
 
     expect(callback).toHaveBeenCalledTimes(6)
     expect(callback).toHaveBeenCalledWith(["foo", "yolo"])
