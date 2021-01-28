@@ -100,34 +100,6 @@ describe("List", () => {
     expect(list.indexOf("baz")).toBe(-1)
   })
 
-  it("resets to initial value", () => {
-    const list = new List(["foo"])
-    list.add("bar")
-
-    expect(list.get()).toEqual(["foo", "bar"])
-
-    list.reset()
-    expect(list.get()).toEqual(["foo"])
-  })
-
-  it("resets to new initial value", () => {
-    const list = new List(["foo"])
-
-    list.reset()
-
-    expect(list.get()).toEqual(["foo"])
-
-    list.add("bar")
-    list.reset(["bar", "baz"])
-
-    expect(list.get()).toEqual(["bar", "baz"])
-
-    list.add("foo")
-    list.reset()
-
-    expect(list.get()).toEqual(["bar", "baz"])
-  })
-
   it("does not mutate previous value", () => {
     const list = new List(["foo", "bar"])
     const value1 = list.get()
@@ -207,7 +179,7 @@ describe("List", () => {
     expect(callback).toHaveBeenCalledTimes(1)
     expect(callback).toHaveBeenCalledWith(["bar"])
 
-    list.reset()
+    list.set(["foo"])
 
     expect(callback).toHaveBeenCalledTimes(2)
     expect(callback).toHaveBeenCalledWith(["foo"])

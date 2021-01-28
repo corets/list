@@ -2,7 +2,6 @@ export interface ObservableList<TValue = any> {
   get(): TValue[]
   getAt(index: number): TValue | undefined
   set(newValue: TValue[]): void
-  reset(initialValue?: TValue[]): void
   add(...values: TValue[]): void
   addAt(index: number, value: TValue): void
   has(value: TValue): boolean

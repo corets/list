@@ -15,17 +15,12 @@ import { ListListenerWithDiffer } from "./ListListenerWithDiffer"
 import { cloneDeep } from "lodash-es"
 
 export class List<TValue = any> implements ObservableList<TValue> {
-  initialValue: TValue[]
   value: TValue[]
   config: ListConfig<TValue>
   listeners: ListListenerWithDiffer<TValue>[]
 
-  constructor(
-    initialValue: TValue[] = [],
-    config?: Partial<ListConfig<TValue>>
-  ) {
-    this.initialValue = cloneDeep(initialValue)
-    this.value = cloneDeep(initialValue)
+  constructor(value: TValue[] = [], config?: Partial<ListConfig<TValue>>) {
+    this.value = cloneDeep(value)
     this.config = {
       differ: config?.differ ?? defaultDiffer,
       remover: config?.remover ?? defaultRemover,
@@ -45,14 +40,6 @@ export class List<TValue = any> implements ObservableList<TValue> {
   set(newValue: TValue[]): void {
     this.value = cloneDeep(newValue)
     this.notify()
-  }
-
-  reset(initialValue?: TValue[]): void {
-    if (initialValue) {
-      this.initialValue = cloneDeep(initialValue)
-    }
-
-    this.set(this.initialValue)
   }
 
   add(...values: TValue[]): void {
