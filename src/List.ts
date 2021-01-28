@@ -1,9 +1,6 @@
 import {
   ListListener,
   ListListenerUnsubscribe,
-  ListDiffer,
-  ListRemover,
-  ListMerger,
   ObservableList,
   ListFilter,
   ListMapper,
