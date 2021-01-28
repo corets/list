@@ -1,54 +1,55 @@
-export interface ObservableList<TState = any> {
-  state: TState[]
-  initialState: TState[]
-
-  get(): TState[]
-  getAt(index: number): TState | undefined
-  set(newState: TState[]): void
-  reset(initialState?: TState[]): void
-  add(...values: TState[]): void
-  addAt(index: number, value: TState): void
-  has(value: TState): boolean
+export interface ObservableList<TValue = any> {
+  get(): TValue[]
+  getAt(index: number): TValue | undefined
+  set(newValue: TValue[]): void
+  reset(initialValue?: TValue[]): void
+  add(...values: TValue[]): void
+  addAt(index: number, value: TValue): void
+  has(value: TValue): boolean
   hasAt(index: number): boolean
-  remove(...values: TState[]): void
+  remove(...values: TValue[]): void
   removeAt(index: number): void
-  indexOf(value: TState): number
+  indexOf(value: TValue): number
 
-  filter(callback: ListFilterCallback<TState>): TState[]
-  map<TResult = TState>(
-    callback: ListMapperCallback<TState, TResult>
-  ): TResult[]
-  forEach(callback: ListForEachCallback<TState>): void
+  filter(callback: ListFilter<TValue>): TValue[]
+  map<TResult = TValue>(callback: ListMapper<TValue, TResult>): TResult[]
+  forEach(callback: ListForEach<TValue>): void
 
   listen(
-    callback: ListCallback<TState>,
-    notifyImmediately?: boolean
-  ): ListCallbackUnsubscribe
+    callback: ListListener<TValue>,
+    options?: ListListenOptions<TValue>
+  ): ListListenerUnsubscribe
 }
 
-export type ListCallback<TState> = (newState: TState[]) => void
-export type ListDiffer<TState> = (
-  oldState: TState[],
-  newState: TState[]
+export type ListConfig<TValue> = {
+  differ: ListDiffer<TValue>
+  remover: ListRemover<TValue>
+  merger: ListMerger<TValue>
+}
+export type ListListenOptions<TValue> = {
+  immediate?: boolean
+  differ?: ListDiffer<TValue>
+}
+export type ListListener<TValue> = (newValue: TValue[]) => void
+export type ListListenerUnsubscribe = () => void
+export type ListDiffer<TValue> = (
+  oldValue: TValue[],
+  newValue: TValue[]
 ) => boolean
-export type ListMerger<TState> = (
-  oldState: TState[],
-  newState: TState[]
-) => TState[]
-export type ListRemover<TState> = (
-  oldState: TState[],
-  valuesToRemove: TState[]
-) => TState[]
-export type ListCallbackUnsubscribe = () => void
-export type ListFilterCallback<TState> = (
-  value: TState,
-  index: number
-) => boolean
-export type ListMapperCallback<TState, TResult> = (
-  value: TState,
+export type ListMerger<TValue> = (
+  oldValue: TValue[],
+  newValue: TValue[]
+) => TValue[]
+export type ListRemover<TValue> = (
+  oldValue: TValue[],
+  valuesToRemove: TValue[]
+) => TValue[]
+export type ListFilter<TValue> = (value: TValue, index: number) => boolean
+export type ListMapper<TValue, TResult> = (
+  value: TValue,
   index: number
 ) => TResult
-export type ListForEachCallback<TState> = (value: TState, index: number) => void
-export type CreateList = <TState>(
-  initialState: TState[]
-) => ObservableList<TState>
+export type ListForEach<TValue> = (value: TValue, index: number) => void
+export type CreateList = <TValue>(
+  initialValue: TValue[]
+) => ObservableList<TValue>

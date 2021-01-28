@@ -1,7 +1,7 @@
 import { defaultRemover } from "./defaultRemover"
 
 describe("defaultRemover", () => {
-  it("removes state", () => {
+  it("removes value", () => {
     const values = ["foo", "bar"]
 
     expect(defaultRemover(values, ["bar"])).toEqual(["foo"])

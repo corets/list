@@ -1,9 +1,9 @@
 import { ListMerger } from "./types"
 
-export const defaultMerger: ListMerger<any> = (oldState, newState) => {
-  if (Array.isArray(oldState) && Array.isArray(newState)) {
-    return [...oldState, ...newState]
+export const defaultMerger: ListMerger<any> = (oldValue, newValue) => {
+  if (Array.isArray(oldValue) && Array.isArray(newValue)) {
+    return [...oldValue, ...newValue]
   }
 
-  return newState
+  return newValue
 }

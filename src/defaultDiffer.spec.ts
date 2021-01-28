@@ -1,7 +1,7 @@
 import { defaultDiffer } from "./defaultDiffer"
 
 describe("defaultDiffer", () => {
-  it("diffs state", () => {
+  it("diffs value", () => {
     const values = ["foo", "bar"]
 
     expect(defaultDiffer(values, values)).toBe(false)

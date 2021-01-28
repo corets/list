@@ -1,127 +1,123 @@
 import {
-  ListCallback,
-  ListCallbackUnsubscribe,
+  ListListener,
+  ListListenerUnsubscribe,
   ListDiffer,
   ListRemover,
   ListMerger,
   ObservableList,
-  ListFilterCallback,
-  ListMapperCallback,
-  ListForEachCallback,
+  ListFilter,
+  ListMapper,
+  ListForEach,
+  ListConfig,
+  ListListenOptions,
 } from "./types"
 import { defaultDiffer } from "./defaultDiffer"
 import { defaultMerger } from "./defaultMerger"
 import { defaultRemover } from "./defaultRemover"
-import { ListListener } from "./ListListener"
+import { ListListenerWithDiffer } from "./ListListenerWithDiffer"
 import { cloneDeep } from "lodash-es"
 
-export class List<TState = any> implements ObservableList<TState> {
-  initialState: TState[]
-  state: TState[]
-  merger: ListMerger<TState>
-  remover: ListRemover<TState>
-  differ: ListDiffer<TState>
-  listeners: ListListener<TState>[]
+export class List<TValue = any> implements ObservableList<TValue> {
+  initialValue: TValue[]
+  value: TValue[]
+  config: ListConfig<TValue>
+  listeners: ListListenerWithDiffer<TValue>[]
 
   constructor(
-    initialState: TState[] = [],
-    merger: ListMerger<TState> = defaultMerger,
-    remover: ListRemover<TState> = defaultRemover,
-    differ: ListDiffer<TState> = defaultDiffer
+    initialValue: TValue[] = [],
+    config?: Partial<ListConfig<TValue>>
   ) {
-    this.initialState = cloneDeep(initialState)
-    this.state = cloneDeep(initialState)
-    this.merger = merger
-    this.remover = remover
-    this.differ = differ
+    this.initialValue = cloneDeep(initialValue)
+    this.value = cloneDeep(initialValue)
+    this.config = {
+      differ: config?.differ ?? defaultDiffer,
+      remover: config?.remover ?? defaultRemover,
+      merger: config?.merger ?? defaultMerger,
+    }
     this.listeners = []
   }
 
-  get(): TState[] {
-    return cloneDeep(this.state)
+  get(): TValue[] {
+    return cloneDeep(this.value)
   }
 
-  getAt(index: number): TState | undefined {
-    return this.state[index]
+  getAt(index: number): TValue | undefined {
+    return this.value[index]
   }
 
-  set(newState: TState[]): void {
-    const isDifferent = this.differ(this.state, newState)
-
-    if (isDifferent) {
-      this.state = cloneDeep(newState)
-      this.notify()
-    }
+  set(newValue: TValue[]): void {
+    this.value = cloneDeep(newValue)
+    this.notify()
   }
 
-  reset(initialState?: TState[]): void {
-    if (initialState) {
-      this.initialState = cloneDeep(initialState)
+  reset(initialValue?: TValue[]): void {
+    if (initialValue) {
+      this.initialValue = cloneDeep(initialValue)
     }
 
-    this.set(this.initialState)
+    this.set(this.initialValue)
   }
 
-  add(...values: TState[]): void {
-    const mergedNewState = this.merger(this.state, cloneDeep(values))
+  add(...values: TValue[]): void {
+    const mergedNewValue = this.config.merger(this.value, cloneDeep(values))
 
-    this.set(mergedNewState)
+    this.set(mergedNewValue)
   }
 
-  addAt(index: number, value: TState): void {
-    const newState = cloneDeep(this.state)
-    newState[index] = value
+  addAt(index: number, value: TValue): void {
+    const newValue = cloneDeep(this.value)
+    newValue[index] = value
 
-    this.set(newState)
+    this.set(newValue)
   }
 
-  has(value: TState): boolean {
-    return this.state.includes(value)
+  has(value: TValue): boolean {
+    return this.value.includes(value)
   }
 
   hasAt(index: number): boolean {
-    return this.state[index] !== undefined
+    return this.value[index] !== undefined
   }
 
-  remove(...values: TState[]): void {
-    this.set(this.remover(this.state, values))
+  remove(...values: TValue[]): void {
+    this.set(this.config.remover(this.value, values))
   }
 
   removeAt(index: number): void {
-    const newState = cloneDeep(this.state)
-    newState.splice(index, 1)
+    const newValue = cloneDeep(this.value)
+    newValue.splice(index, 1)
 
-    this.set(newState)
+    this.set(newValue)
   }
 
-  indexOf(value: TState): number {
-    return this.state.indexOf(value)
+  indexOf(value: TValue): number {
+    return this.value.indexOf(value)
   }
 
-  filter(callback: ListFilterCallback<TState>): TState[] {
-    return this.state.filter(callback)
+  filter(callback: ListFilter<TValue>): TValue[] {
+    return this.value.filter(callback)
   }
 
-  map<TResult = TState>(
-    callback: ListMapperCallback<TState, TResult>
-  ): TResult[] {
-    return this.state.map(callback)
+  map<TResult = TValue>(callback: ListMapper<TValue, TResult>): TResult[] {
+    return this.value.map(callback)
   }
 
-  forEach(callback: ListForEachCallback<TState>) {
-    this.state.forEach(callback)
+  forEach(callback: ListForEach<TValue>) {
+    this.value.forEach(callback)
   }
 
   listen(
-    callback: ListCallback<TState>,
-    notifyImmediately: boolean = true
-  ): ListCallbackUnsubscribe {
-    const listener = new ListListener<TState>(callback, this.differ)
+    callback: ListListener<TValue>,
+    options?: ListListenOptions<TValue>
+  ): ListListenerUnsubscribe {
+    const differ = options?.differ ?? this.config.differ
+    const notifyImmediately = options?.immediate
+    const listener = new ListListenerWithDiffer<TValue>(callback, differ)
 
     this.listeners.push(listener)
 
     if (notifyImmediately) {
-      listener.notify(this.state)
+      listener.notify(this.value)
     }
 
     return () => {
@@ -130,6 +126,6 @@ export class List<TState = any> implements ObservableList<TState> {
   }
 
   protected notify() {
-    this.listeners.forEach((listener) => listener.notify(this.state as any))
+    this.listeners.forEach((listener) => listener.notify(this.value as any))
   }
 }
