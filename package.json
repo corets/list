@@ -1,7 +1,7 @@
 {
   "name": "@corets/list",
   "description": "Observable list that can be used inside and outside of React",
-  "version": "0.0.1-8",
+  "version": "0.0.1-9",
   "author": "Maxim Kott",
   "license": "MIT",
   "main": "dist/index.js",
@@ -40,9 +40,9 @@
     "jest": "^25.1.0",
     "lodash": "^4.17.20",
     "microbundle": "^0.13.0",
+    "np": "^7.2.0",
     "prettier": "2.2.1",
     "ts-jest": "^25.2.1",
-    "typescript": "^3.8.3",
-    "np": "^7.2.0"
+    "typescript": "^3.8.3"
   }
 }
