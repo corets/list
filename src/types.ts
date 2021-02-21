@@ -9,6 +9,7 @@ export interface ObservableList<TValue = any> {
   remove(...values: TValue[]): void
   removeAt(index: number): void
   indexOf(value: TValue): number
+  use(): [TValue[], ListSetter<TValue>]
 
   filter(callback: ListFilter<TValue>): TValue[]
   map<TResult = TValue>(callback: ListMapper<TValue, TResult>): TResult[]
@@ -52,3 +53,5 @@ export type ListForEach<TValue> = (value: TValue, index: number) => void
 export type CreateList = <TValue>(
   initialValue: TValue[]
 ) => ObservableList<TValue>
+export type CreateListSetter = <TValue = any>(value: ObservableList<TValue>) => ListSetter<TValue>
+export type ListSetter<TValue = any> = (newValue: TValue[] | ((oldValue: TValue[]) => TValue[])) => void

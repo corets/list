@@ -1,4 +1,4 @@
-import { List } from "./index"
+import { createList, List } from "./index"
 
 describe("List", () => {
   it("creates list with initial value", () => {
@@ -287,5 +287,21 @@ describe("List", () => {
 
     expect(callback).toHaveBeenCalledTimes(3)
     expect(callback).toHaveBeenCalledWith(["bar"])
+  })
+
+  it("is usable", () => {
+    const items = createList(["a", "b"])
+    const [list, setList] = items.use()
+
+    expect(items.get()).toEqual(["a", "b"])
+    expect(items.get()).toEqual(list)
+
+    setList(["a", "c"])
+
+    expect(items.get()).toEqual(["a", "c"])
+
+    setList((oldValue => [...oldValue, "b"]))
+
+    expect(items.get()).toEqual(["a", "c", "b"])
   })
 })

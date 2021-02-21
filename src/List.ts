@@ -6,13 +6,14 @@ import {
   ListMapper,
   ListForEach,
   ListConfig,
-  ListListenOptions,
+  ListListenOptions, ListSetter,
 } from "./types"
 import { defaultDiffer } from "./defaultDiffer"
 import { defaultMerger } from "./defaultMerger"
 import { defaultRemover } from "./defaultRemover"
 import { ListListenerWithDiffer } from "./ListListenerWithDiffer"
 import { cloneDeep } from "lodash-es"
+import { createListSetter } from "./createListSetter"
 
 export class List<TValue = any> implements ObservableList<TValue> {
   value: TValue[]
@@ -76,6 +77,10 @@ export class List<TValue = any> implements ObservableList<TValue> {
 
   indexOf(value: TValue): number {
     return this.value.indexOf(value)
+  }
+
+  use(): [TValue[], ListSetter<TValue>] {
+    return [this.get(), createListSetter(this)]
   }
 
   filter(callback: ListFilter<TValue>): TValue[] {
