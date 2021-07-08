@@ -1,5 +1,5 @@
 import { ListDiffer } from "./types"
-import { isEqual } from "lodash-es"
+import isEqual from "fast-deep-equal"
 
 export const defaultDiffer: ListDiffer<any> = (oldValue, newValue) =>
   !isEqual(oldValue, newValue)
