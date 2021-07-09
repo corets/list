@@ -12,7 +12,7 @@ import { defaultDiffer } from "./defaultDiffer"
 import { defaultMerger } from "./defaultMerger"
 import { defaultRemover } from "./defaultRemover"
 import { ListListenerWithDiffer } from "./ListListenerWithDiffer"
-import { cloneDeep } from "lodash-es"
+import { cloneDeep } from "lodash"
 import { createListSetter } from "./createListSetter"
 
 export class List<TValue = any> implements ObservableList<TValue> {
